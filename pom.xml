@@ -5,9 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.ykatsatos.hashmaster</groupId>
-  <artifactId>hashMaster</artifactId>
+  <artifactId>HashMaster</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>hashMaster</name>
+  <name>HashMaster</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

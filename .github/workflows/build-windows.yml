@@ -22,7 +22,7 @@ jobs:
           # jpackage command to bundle the app
           jpackage --name "HashMaster" `
                    --input target/ `
-                   --main-jar hashMaster.jar `
+                   --main-jar HashMaster-1.0-SNAPSHOT.jar `
                    --main-class com.ykatsatos.hashmaster.hashmaster.Launcher `
                    --type exe `
                    --win-shortcut `
