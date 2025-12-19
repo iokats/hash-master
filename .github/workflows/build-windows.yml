@@ -1,9 +1,11 @@
-name: Build Windows EXE
-on: [push] # Triggers the build every time you push code
+name: Build Windows Installer
+
+on: [push]
 
 jobs:
   build:
-    runs-on: windows-latest # Runs on a Windows virtual machine
+    runs-on: windows-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -11,26 +13,56 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          java-version: '21' # Or your preferred JDK version
+          java-version: '21'
           distribution: 'temurin'
 
-      - name: Build with Maven # Change to Gradle if needed
+      - name: Build with Maven
         run: mvn clean package
 
+      # -----------------------------
+      # Download JavaFX SDK
+      # -----------------------------
+      - name: Download JavaFX
+        run: |
+          curl -L https://download2.gluonhq.com/openjfx/21/openjfx-21_windows-x64_bin-sdk.zip -o javafx.zip
+          tar -xf javafx.zip
+
+      # -----------------------------
+      # Create custom runtime (jlink)
+      # -----------------------------
+      - name: Create Java Runtime Image
+        run: |
+          jlink ^
+            --module-path "%JAVA_HOME%\jmods;javafx-sdk-21\lib" ^
+            --add-modules java.base,java.desktop,javafx.controls,javafx.fxml ^
+            --output runtime ^
+            --strip-debug ^
+            --no-header-files ^
+            --no-man-pages
+
+      # -----------------------------
+      # Create Windows Installer
+      # -----------------------------
       - name: Create Windows Installer
         run: |
-          # jpackage command to bundle the app
-          jpackage --name "HashMaster" `
-                   --input target/ `
-                   --main-jar HashMaster-1.0-SNAPSHOT.jar `
-                   --main-class com.ykatsatos.hashmaster.Launcher `
-                   --type exe `
-                   --win-shortcut `
-                   --win-menu `
-                   --win-dir-chooser
+          jpackage ^
+            --name HashMaster ^
+            --type exe ^
+            --input target ^
+            --main-jar HashMaster-1.0-SNAPSHOT.jar ^
+            --main-class com.ykatsatos.hashmaster.HashMasterApplication ^
+            --runtime-image runtime ^
+            --app-version 1.0.0 ^
+            --vendor "IEKatsatos" ^
+            --win-menu ^
+            --win-shortcut ^
+            --win-dir-chooser
 
+      # -----------------------------
+      # Upload Installer
+      # -----------------------------
       - name: Upload Installer
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: "*.exe" # Uploads the generated .exe file
+          path: "*.exe"
