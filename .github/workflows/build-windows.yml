@@ -23,7 +23,7 @@ jobs:
           jpackage --name "HashMaster" `
                    --input target/ `
                    --main-jar HashMaster-1.0-SNAPSHOT.jar `
-                   --main-class com.ykatsatos.hashmaster.hashmaster.Launcher `
+                   --main-class com.ykatsatos.hashmaster.Launcher `
                    --type exe `
                    --win-shortcut `
                    --win-menu `

@@ -1,4 +1,4 @@
-package com.ykatsatos.hashmaster.hashmaster;
+package com.ykatsatos.hashmaster;
 
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -12,17 +12,24 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.util.HexFormat;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 public class HashMasterController {
+    private static final Logger LOGGER = Logger.getLogger(HashMasterController.class.getName());
 
     private static final String SHA_512_ALGORITHM = "SHA-512";
     private static final int maxReadSize = 8192;
+
+    private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
     @FXML
     private TextArea hashResultArea;
 
     @FXML
     protected void onLoadFileButtonClick(final ActionEvent event) {
+
         // 1. Create the FileChooser
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -45,21 +52,26 @@ public class HashMasterController {
 
             hashResultArea.setText("Calculating hash...");
 
-            Task<String> task = new Task<>() {
-                @Override
-                protected String call() throws Exception {
-                    return calculateFileChecksum(selectedFile);
-                }
-            };
+            final Task<String> task = createChecksumTask(selectedFile);
 
             task.setOnSucceeded(e -> hashResultArea.setText(task.getValue()));
             task.setOnFailed(e -> hashResultArea.setText("Error calculating hash."));
 
-            new Thread(task).start();
+            executor.execute(task);
 
         } else {
-            System.out.println("File selection cancelled.");
+            LOGGER.warning("File selection cancelled.");
         }
+    }
+
+    private Task<String> createChecksumTask(File selectedFile) {
+
+        return new Task<>() {
+            @Override
+            protected String call() throws Exception {
+                return calculateFileChecksum(selectedFile);
+            }
+        };
     }
 
     private String calculateFileChecksum(File selectedFile) throws Exception {
@@ -76,5 +88,10 @@ public class HashMasterController {
 
         final byte[] bytes = digest.digest();
         return HexFormat.of().formatHex(bytes);
+    }
+
+    public void dispose() {
+
+        executor.shutdown();
     }
 }

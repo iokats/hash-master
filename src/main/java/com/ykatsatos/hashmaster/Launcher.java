@@ -1,4 +1,4 @@
-package com.ykatsatos.hashmaster.hashmaster;
+package com.ykatsatos.hashmaster;
 
 import javafx.application.Application;
 
