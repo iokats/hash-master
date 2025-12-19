@@ -1,0 +1,41 @@
+name: Build Linux DEB
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Runs on a Linux virtual machine
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Install Prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fakeroot # Required for jpackage to build .deb
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Create Linux Installer
+        run: |
+          # Create the .deb package
+          jpackage --name "HashMaster" \
+                   --input target/ \
+                   --main-jar HashMaster-1.0-SNAPSHOT.jar \
+                   --main-class com.ykatsatos.hashmaster.Launcher \
+                   --type deb \
+                   --install-dir /opt/hashmaster \
+                   --linux-shortcut \
+                   --linux-menu-group "Utility"
+
+      - name: Upload Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-deb-installer
+          path: "*.deb"
