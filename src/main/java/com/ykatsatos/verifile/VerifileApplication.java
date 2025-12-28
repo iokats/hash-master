@@ -1,4 +1,4 @@
-package com.ykatsatos.hashmaster;
+package com.ykatsatos.verifile;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,16 +7,16 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HashMasterApplication extends Application {
+public class VerifileApplication extends Application {
 
     private static final String TITLE = "Hash Master";
     private static final String VIEW_FXML = "hashmaster-view.fxml";
 
-    private HashMasterController controller;
+    private VerifileController controller;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HashMasterApplication.class.getResource(VIEW_FXML));
+        FXMLLoader fxmlLoader = new FXMLLoader(VerifileApplication.class.getResource(VIEW_FXML));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
 
         controller = fxmlLoader.getController();

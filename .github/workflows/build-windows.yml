@@ -56,14 +56,14 @@ jobs:
       - name: Create Windows Installer
         run: |
           jpackage `
-            --name HashMaster `
+            --name Verifile `
             --type exe `
             --input target `
-            --main-jar HashMaster-1.0-SNAPSHOT.jar `
-            --main-class com.ykatsatos.hashmaster.HashMasterApplication `
+            --main-jar Verifile-1.0-SNAPSHOT.jar `
+            --main-class com.ykatsatos.verifile.VerifileApplication `
             --runtime-image runtime `
             --app-version 1.0.0 `
-            --vendor "YourName" `
+            --vendor "IEK" `
             --win-menu `
             --win-shortcut `
             --win-dir-chooser

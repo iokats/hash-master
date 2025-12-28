@@ -1,4 +1,4 @@
-package com.ykatsatos.hashmaster;
+package com.ykatsatos.verifile;
 
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -16,8 +16,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-public class HashMasterController {
-    private static final Logger LOGGER = Logger.getLogger(HashMasterController.class.getName());
+public class VerifileController {
+    private static final Logger LOGGER = Logger.getLogger(VerifileController.class.getName());
 
     private static final String SHA_512_ALGORITHM = "SHA-512";
     private static final int maxReadSize = 8192;
